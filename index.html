@@ -272,19 +272,35 @@
 
         <!-- Question Section -->
         <div class="question-block">
-            <h3>Task Details</h3>
-            <p id="questionContent">Loading questions...</p>
+            <h3>Day 1 Tasks</h3>
+            <p><strong>Task 1: Image Transforms</strong><br>
+            Both images above started as the exact same checkerboard grid and were rotated by 45 degrees. Which image used <em>Forward Mapping</em> and which used <em>Backward Mapping</em>? Why do the black holes appear in one, and what specific interpolation method caused the jagged lines in the other?</p>
+            
+            <p><strong>Task 2: Perspective Projection</strong><br>
+            Two identical cars are parked on a straight road. Car A is 10 meters away from your camera, and Car B is 20 meters away. In your final image, exactly how does the width of Car B (in pixels) compare to Car A? State the mathematical reason.</p>
+
+            <p><strong>Task 3: Camera Matrices</strong><br>
+            You mount your camera on a drone, fly it 50 meters into the air, and tilt it downwards to take a photo. In the camera projection matrix P = K[R|t], did this action change the Intrinsic matrix (K), the Extrinsic matrix ([R|t]), or both? Explain why.</p>
+
+            <p><strong>Task 4: Focal Length</strong><br>
+            Without moving your camera's physical position, you swap the lens, effectively doubling the focal length. Does your Field of View (FOV) increase or decrease? What happens to the apparent size of the objects in the image?</p>
         </div>
 
         <!-- Answer Section -->
         <div class="answer-section">
-            <label for="answer">Your Diagnosis (Max 10 sentences):</label>
-            <span class="anti-cheat-warning">⚠️ Note: Copy-pasting is strictly disabled. You must type your own answer.</span>
-            <textarea id="answer" name="answer" rows="10" required
-                      onpaste="return false;"
-                      oncopy="return false;"
-                      oncontextmenu="return false;"
-                      placeholder="Type your technical diagnosis here..."></textarea>
+            <span class="anti-cheat-warning">⚠️ Note: Copy-pasting is strictly disabled. You must type your own answers.</span>
+            
+            <label for="answer1"><br>Task 1 Diagnosis (Transforms):</label>
+            <textarea id="answer1" name="answer1_transforms" rows="3" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;"></textarea>
+
+            <label for="answer2"><br>Task 2 Diagnosis (Perspective):</label>
+            <textarea id="answer2" name="answer2_perspective" rows="2" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;"></textarea>
+
+            <label for="answer3"><br>Task 3 Diagnosis (Matrices):</label>
+            <textarea id="answer3" name="answer3_matrices" rows="2" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;"></textarea>
+
+            <label for="answer4"><br>Task 4 Diagnosis (Focal Length):</label>
+            <textarea id="answer4" name="answer4_focallength" rows="2" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;"></textarea>
         </div>
 
         <button type="submit" id="submitBtn">Submit Assessment</button>
@@ -334,7 +350,11 @@
                 document.getElementById('challengeTitle').innerText = challenge.title;
                 document.getElementById('imageA').src = challenge.imageA;
                 document.getElementById('imageB').src = challenge.imageB;
-                document.getElementById('questionContent').innerHTML = challenge.question;
+                
+                const questionContentEl = document.getElementById('questionContent');
+                if (questionContentEl) {
+                    questionContentEl.innerHTML = challenge.question;
+                }
                 
                 // Set sheet routing properties
                 challengeIdInput.value = challenge.tabName || currentChallengeId;
@@ -444,7 +464,17 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting response...';
 
+            // Build consolidated answer string from all textareas in the answer section
+            const textareas = form.querySelectorAll('.answer-section textarea');
+            let combinedAnswer = "";
+            textareas.forEach(ta => {
+                const label = form.querySelector(`label[for="${ta.id}"]`);
+                const labelText = label ? label.innerText.replace('\n', '').trim() : ta.name;
+                combinedAnswer += `${labelText}\n${ta.value}\n\n`;
+            });
+
             const formData = new FormData(form);
+            formData.append('answer', combinedAnswer.trim());
             
             fetch(actionUrl, {
                 method: 'POST',
