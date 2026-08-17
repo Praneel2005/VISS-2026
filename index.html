@@ -343,7 +343,7 @@
                 document.getElementById('imageBDesc').innerText = currentChallengeId === 'day1' ? 'Solid, but jagged/staircase edges' : 'Visual details';
 
                 // Re-evaluate submission status for this specific day
-                checkSubmissionStatus();
+                checkSubmissionStatus(challenge);
             })
             .catch(err => {
                 console.error(err);
@@ -351,15 +351,34 @@
                 document.getElementById('questionContent').innerText = "There was an error retrieving today's questions. Please contact the administrator.";
             });
 
-        function checkSubmissionStatus() {
-            const submissionKey = 'cevi_submitted_' + currentChallengeId;
-            if (localStorage.getItem(submissionKey) === 'true') {
-                disableForm();
-                messageTitle.innerText = "Submission Received!";
-                messageTitle.style.color = "#0b7285";
-                messageText.innerText = "You have already successfully submitted your response for " + currentChallengeId.toUpperCase() + " from this browser.";
-            }
-        }
+        function checkSubmissionStatus(challenge) {
+             const submissionKey = 'cevi_submitted_' + currentChallengeId;
+             
+             // First check for expiration (24h limit)
+             if (challenge && challenge.expiresAt) {
+                 const now = new Date();
+                 const expiryDate = new Date(challenge.expiresAt);
+                 if (now > expiryDate) {
+                     disableForm();
+                     messageTitle.innerText = "Assessment Period Closed";
+                     messageTitle.style.color = "#d9534f";
+                     messageDiv.style.background = "#fdeeee";
+                     messageDiv.style.borderLeft = "6px solid #d9534f";
+                     messageText.innerHTML = "⚠️ This challenge closed on " + expiryDate.toLocaleString() + " (active for 24 hours only). Submissions are no longer accepted.";
+                     return;
+                 }
+             }
+
+             // Then check for previous submission
+             if (localStorage.getItem(submissionKey) === 'true') {
+                 disableForm();
+                 messageTitle.innerText = "Submission Received!";
+                 messageTitle.style.color = "#0b7285";
+                 messageDiv.style.background = "#e6fcf5";
+                 messageDiv.style.borderLeft = "6px solid #0ca678";
+                 messageText.innerText = "You have already successfully submitted your response for " + currentChallengeId.toUpperCase() + " from this browser.";
+             }
+         }
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();

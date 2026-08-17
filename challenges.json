@@ -6,7 +6,8 @@
       "imageA": "image_A_forward.png",
       "imageB": "image_B_backward.png",
       "question": "Both images started as the exact same checkerboard grid and were rotated by 45 degrees.<br><br><strong>1.</strong> Which image used <em>Forward Mapping</em> and which used <em>Backward Mapping</em>?<br><strong>2.</strong> Why do the black holes appear in one, and what specific interpolation method caused the jagged lines in the other?",
-      "tabName": "Day 1 - Rotation"
+      "tabName": "Day 1 - Rotation",
+      "expiresAt": "2026-08-18T11:05:00Z"
     }
   }
 }

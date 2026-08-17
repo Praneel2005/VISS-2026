@@ -61,13 +61,18 @@ def main():
 
     tab_name = args.tab if args.tab else f"Day {challenge_id.replace('day', '')}"
 
+    import datetime
+    released_at = datetime.datetime.now(datetime.timezone.utc)
+    expires_at = released_at + datetime.timedelta(hours=24)
+
     config["activeChallenge"] = challenge_id
     config["challenges"][challenge_id] = {
         "title": args.title,
         "imageA": dest_img_a,
         "imageB": dest_img_b,
         "question": args.q,
-        "tabName": tab_name
+        "tabName": tab_name,
+        "expiresAt": expires_at.isoformat().replace("+00:00", "Z")
     }
 
     try:
