@@ -1,5 +1,5 @@
 {
-  "activeChallenge": "day1",
+  "activeChallenge": "day2",
   "challenges": {
     "day1": {
       "title": "Day 1 Visual Drop: The 'Hole-y' Rotation Mystery",
@@ -7,6 +7,13 @@
       "imageB": "image_B_backward.png",
       "question": "Both images started as the exact same checkerboard grid and were rotated by 45 degrees.<br><br><strong>1.</strong> Which image used <em>Forward Mapping</em> and which used <em>Backward Mapping</em>?<br><strong>2.</strong> Why do the black holes appear in one, and what specific interpolation method caused the jagged lines in the other?",
       "tabName": "Day 1 - Rotation"
+    },
+    "day2": {
+      "title": "Day 2 Test: Subsampling Aliasing",
+      "imageA": "day2_imgA.png",
+      "imageB": "day2_imgB.png",
+      "question": "This is a test question for Day 2. Explain what causes aliasing in subsampled grids.",
+      "tabName": "Day 2 - Aliasing"
     }
   }
 }
