@@ -83,7 +83,7 @@ def main():
     run_git_command(f'git add challenges.json "{dest_img_a}" "{dest_img_b}"')
     run_git_command(f'git commit -m "Release daily challenge: {challenge_id} - {args.title}"')
     run_git_command('git push origin main')
-    print(f"\n🚀 Success! Challenge '{challenge_id}' is deployed and currently publishing live.")
+    print(f"\nSuccess! Challenge '{challenge_id}' is deployed and currently publishing live.")
     print(f"Student Portal: https://praneel2005.github.io/VISS-2026/")
     print(f"Direct Challenge Link: https://praneel2005.github.io/VISS-2026/?challenge={challenge_id}")
 
