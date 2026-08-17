@@ -218,11 +218,14 @@
     <div class="header">
         <span class="badge">CEVI Summer School</span>
         <h1>CEVI Summer School</h1>
-        <p>Day 1 Visual Drop: The "Hole-y" Rotation Mystery</p>
+        <p id="challengeTitle">Loading challenge...</p>
     </div>
 
-    <!-- The Formspree endpoint goes in the action attribute below -->
+    <!-- The Formspree/Google Sheets Web App URL goes in the action attribute below -->
     <form id="assessmentForm" action="https://script.google.com/macros/s/AKfycbxGZ_lbpxUP_-dpCY0_JIKFWOHgmsBxx9C5K6I0C2fu2yGhZa8ym58A07IQF-bljlCr/exec" method="POST">
+
+        <!-- Hidden input for dynamic sheet routing -->
+        <input type="hidden" id="challengeId" name="challengeId" value="">
 
         <!-- Student Metadata Section -->
         <div class="section-label">Student Details</div>
@@ -255,23 +258,21 @@
         <div class="section-label">Visual Evidence</div>
         <div class="image-section">
             <div class="image-card">
-                <img src="image_A_forward.png" alt="Image A - Demonstrating holes">
+                <img id="imageA" src="" alt="Image A - Visual Drop">
                 <h3>Image A</h3>
-                <p>Riddled with black speckles</p>
+                <p id="imageADesc">Visual details</p>
             </div>
             <div class="image-card">
-                <img src="image_B_backward.png" alt="Image B - Demonstrating jagged edges">
+                <img id="imageB" src="" alt="Image B - Visual Drop">
                 <h3>Image B</h3>
-                <p>Solid, but jagged/staircase edges</p>
+                <p id="imageBDesc">Visual details</p>
             </div>
         </div>
 
         <!-- Question Section -->
         <div class="question-block">
             <h3>Task Details</h3>
-            <p>Both images started as the exact same checkerboard grid and were rotated by 45 degrees.<br><br>
-            <strong>1.</strong> Which image used <em>Forward Mapping</em> and which used <em>Backward Mapping</em>?<br>
-            <strong>2.</strong> Why do the black holes appear in one, and what specific interpolation method caused the jagged lines in the other?</p>
+            <p id="questionContent">Loading questions...</p>
         </div>
 
         <!-- Answer Section -->
@@ -302,36 +303,86 @@
         const messageTitle = document.getElementById('alreadySubmittedTitle');
         const messageText = document.getElementById('alreadySubmittedText');
         const emailInput = document.getElementById('email');
+        const challengeIdInput = document.getElementById('challengeId');
+        
+        let currentChallengeId = 'day1';
 
-        // Check if already submitted on this device
-        if (localStorage.getItem('cevi_day_1_submitted') === 'true') {
-            disableForm();
-            messageTitle.innerText = "Submission Received!";
-            messageTitle.style.color = "#0b7285";
-            messageText.innerText = "You have already successfully submitted your response for this assessment from this browser.";
+        // Load challenge data from config file
+        fetch('challenges.json')
+            .then(res => {
+                if (!res.ok) throw new Error('Could not load challenges configuration.');
+                return res.json();
+            })
+            .then(data => {
+                // Parse URL parameter to check for specific challenge (e.g. ?challenge=day1)
+                const urlParams = new URLSearchParams(window.location.search);
+                const requestedDay = urlParams.get('challenge');
+                
+                // Determine which challenge to display
+                currentChallengeId = (requestedDay && data.challenges[requestedDay]) 
+                    ? requestedDay 
+                    : data.activeChallenge;
+
+                const challenge = data.challenges[currentChallengeId];
+                if (!challenge) {
+                    alert('Error: Requested challenge ID not found.');
+                    return;
+                }
+
+                // Render challenge details to DOM
+                document.getElementById('challengeTitle').innerText = challenge.title;
+                document.getElementById('imageA').src = challenge.imageA;
+                document.getElementById('imageB').src = challenge.imageB;
+                document.getElementById('questionContent').innerHTML = challenge.question;
+                
+                // Set sheet routing properties
+                challengeIdInput.value = challenge.tabName || currentChallengeId;
+                
+                // Configure descriptions
+                document.getElementById('imageADesc').innerText = currentChallengeId === 'day1' ? 'Riddled with black speckles' : 'Visual details';
+                document.getElementById('imageBDesc').innerText = currentChallengeId === 'day1' ? 'Solid, but jagged/staircase edges' : 'Visual details';
+
+                // Re-evaluate submission status for this specific day
+                checkSubmissionStatus();
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('challengeTitle').innerText = "Failed to load challenge";
+                document.getElementById('questionContent').innerText = "There was an error retrieving today's questions. Please contact the administrator.";
+            });
+
+        function checkSubmissionStatus() {
+            const submissionKey = 'cevi_submitted_' + currentChallengeId;
+            if (localStorage.getItem(submissionKey) === 'true') {
+                disableForm();
+                messageTitle.innerText = "Submission Received!";
+                messageTitle.style.color = "#0b7285";
+                messageText.innerText = "You have already successfully submitted your response for " + currentChallengeId.toUpperCase() + " from this browser.";
+            }
         }
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const email = emailInput.value.trim().toLowerCase();
-            
+            const emailKey = 'submitted_' + currentChallengeId + '_email_' + email;
+            const submissionKey = 'cevi_submitted_' + currentChallengeId;
+
             // Check email submission history in localStorage
-            if (localStorage.getItem('submitted_email_' + email)) {
-                alert('An assessment response has already been submitted using this email address.');
+            if (localStorage.getItem(emailKey)) {
+                alert('An assessment response has already been submitted for this challenge using this email address.');
                 return false;
             }
 
             const actionUrl = form.getAttribute('action');
-            if (actionUrl === 'YOUR_FORMSPREE_ENDPOINT_HERE' || actionUrl.trim() === '') {
-                alert('Configuration Required: Please replace YOUR_FORMSPREE_ENDPOINT_HERE in index.html (Line 225) with your actual Formspree or Google Apps Script URL before testing.');
+            if (actionUrl === '' || actionUrl.includes('YOUR_FORMSPREE_ENDPOINT')) {
+                alert('Configuration Error: Submission endpoint is not set.');
                 return false;
             }
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting response...';
 
-            // Prepare POST payload
             const formData = new FormData(form);
             
             fetch(actionUrl, {
@@ -343,8 +394,8 @@
             })
             .then(response => {
                 if (response.ok) {
-                    localStorage.setItem('submitted_email_' + email, 'true');
-                    localStorage.setItem('cevi_day_1_submitted', 'true');
+                    localStorage.setItem(emailKey, 'true');
+                    localStorage.setItem(submissionKey, 'true');
                     disableForm();
                     messageTitle.innerText = "Submission Successful!";
                     messageTitle.style.color = "#0ca678";
@@ -362,12 +413,11 @@
                 }
             })
             .catch(error => {
-                console.warn('Network or CORS error, checking backup flow...', error);
+                console.warn('Network or CORS warning, tracking backup flow...', error);
                 
-                // Fallback: Google Apps Script Web App can run successfully but fail CORS. 
-                // We record it as successful to prevent lockout confusion if the spreadsheet logged it.
-                localStorage.setItem('submitted_email_' + email, 'true');
-                localStorage.setItem('cevi_day_1_submitted', 'true');
+                // Fallback for custom Google Sheet scripts
+                localStorage.setItem(emailKey, 'true');
+                localStorage.setItem(submissionKey, 'true');
                 disableForm();
                 messageTitle.innerText = "Submission Logged!";
                 messageTitle.style.color = "#0ca678";
