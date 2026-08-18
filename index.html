@@ -325,8 +325,8 @@
         
         let currentChallengeId = 'day1';
 
-        // Load challenge data from config file
-        fetch('challenges.json')
+        // Load challenge data from config file with cache busting
+        fetch('challenges.json?t=' + Date.now())
             .then(res => {
                 if (!res.ok) throw new Error('Could not load challenges configuration.');
                 return res.json();
