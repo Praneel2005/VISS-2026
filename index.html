@@ -325,6 +325,10 @@
         
         let currentChallengeId = 'day1';
 
+        // Cleanup old legacy keys from previous versions to avoid any conflicts
+        localStorage.removeItem('cevi_day_1_submitted');
+        localStorage.removeItem('cevi_submitted');
+
         // Load challenge data from config file with cache busting
         fetch('challenges.json?t=' + Date.now())
             .then(res => {
