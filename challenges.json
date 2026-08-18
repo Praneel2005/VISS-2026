@@ -1,5 +1,5 @@
 {
-  "activeChallenge": "day1",
+  "activeChallenge": "day2",
   "challenges": {
     "day1": {
       "title": "Day 1 Visual Drop: The 'Hole-y' Rotation Mystery",
@@ -8,6 +8,14 @@
       "question": "Both images started as the exact same checkerboard grid and were rotated by 45 degrees.<br><br><strong>1.</strong> Which image used <em>Forward Mapping</em> and which used <em>Backward Mapping</em>?<br><strong>2.</strong> Why do the black holes appear in one, and what specific interpolation method caused the jagged lines in the other?",
       "tabName": "Day 1 - Rotation",
       "expiresAt": "2026-08-18T11:05:00Z"
+    },
+    "day2": {
+      "title": "Day 2: Image Filtering, Restoration & Registration Projective Geometry & Camera Models",
+      "imageA": "q1_noise.png",
+      "imageB": "q2_matches.png",
+      "question": "Please answer the 4 questions regarding image filters, keypoint registration, vanishing points, and epipolar geometry.",
+      "tabName": "Day 2 - Filters & Models",
+      "expiresAt": "2026-08-19T09:06:27Z"
     }
   }
 }

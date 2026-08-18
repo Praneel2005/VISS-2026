@@ -255,63 +255,52 @@
             </div>
         </div>
 
-        <!-- Image Comparison Section -->
-        <div class="section-label">Visual Evidence</div>
-        <div class="image-section">
-            <div class="image-card">
-                <img id="imageA" src="" alt="Image A - Visual Drop">
-                <h3>Image A</h3>
-                <p id="imageADesc">Visual details</p>
-            </div>
-            <div class="image-card">
-                <img id="imageB" src="" alt="Image B - Visual Drop">
-                <h3>Image B</h3>
-                <p id="imageBDesc">Visual details</p>
-            </div>
-        </div>
-
         <!-- Assessment Section -->
         <div class="assessment-section">
             <span class="anti-cheat-warning" style="margin-bottom: 25px;">⚠️ Note: Copy-pasting is strictly disabled. You must type your own answers.</span>
             
             <!-- Question 1 -->
             <div class="question-block" style="margin-bottom: 15px;">
-                <h3>Question 1: Image Transforms</h3>
-                <p>Both images above started as the exact same checkerboard grid and were rotated by 45 degrees. Which image used <em>Forward Mapping</em> and which used <em>Backward Mapping</em>? Why do the black holes appear in one, and what specific interpolation method caused the jagged lines in the other?</p>
+                <h3>Question 1: The "Smudge vs. Erase" Dilemma (Filtering)</h3>
+                <img src="q1_noise.png" alt="Salt and Pepper Noise" style="max-width: 100%; border-radius: 8px; margin-top: 15px; margin-bottom: 15px; display: block; box-shadow: 0 4px 10px rgba(31,25,90,0.08);">
+                <p>An image is heavily corrupted by salt-and-pepper noise (random pure white and black pixels). Student A applies a 7x7 Gaussian Blur. Student B applies a 7x7 Median Filter. Without writing any math, describe exactly what the noise will physically look like in Student A's final image versus Student B's final image.</p>
             </div>
             <div class="answer-section" style="margin-bottom: 30px;">
-                <label for="answer1">Question 1 Diagnosis (Transforms):</label>
-                <textarea id="answer1" name="answer1_transforms" rows="4" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;" placeholder="Type your Question 1 answer here..."></textarea>
+                <label for="answer1">Question 1 Diagnosis (Filtering):</label>
+                <textarea id="answer1" name="answer1_filtering" rows="4" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;" placeholder="Type your Question 1 answer here..."></textarea>
             </div>
 
             <!-- Question 2 -->
             <div class="question-block" style="margin-bottom: 15px;">
-                <h3>Question 2: Perspective Projection</h3>
-                <p>Two identical cars are parked on a straight road. Car A is 10 meters away from your camera, and Car B is 20 meters away. In your final image, exactly how does the width of Car B (in pixels) compare to Car A? State the mathematical reason.</p>
+                <h3>Question 2: The "Moving Bus" Sabotage (Registration)</h3>
+                <img src="q2_matches.png" alt="Feature Matches" style="max-width: 100%; border-radius: 8px; margin-top: 15px; margin-bottom: 15px; display: block; box-shadow: 0 4px 10px rgba(31,25,90,0.08);">
+                <p>You are trying to stitch two photos together to make a panorama. SIFT finds 500 matching keypoints, but 50 of them are completely wrong because they attached to a bus that drove across the scene between the two shots. If you calculate the Homography using basic Least Squares on all 500 points, what will the final stitched panorama look like? Name the specific algorithm you must use to ignore the bus.</p>
             </div>
             <div class="answer-section" style="margin-bottom: 30px;">
-                <label for="answer2">Question 2 Diagnosis (Perspective):</label>
-                <textarea id="answer2" name="answer2_perspective" rows="3" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;" placeholder="Type your Question 2 answer here..."></textarea>
+                <label for="answer2">Question 2 Diagnosis (Registration):</label>
+                <textarea id="answer2" name="answer2_registration" rows="3" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;" placeholder="Type your Question 2 answer here..."></textarea>
             </div>
 
             <!-- Question 3 -->
             <div class="question-block" style="margin-bottom: 15px;">
-                <h3>Question 3: Camera Matrices</h3>
-                <p>You mount your camera on a drone, fly it 50 meters into the air, and tilt it downwards to take a photo. In the camera projection matrix P = K[R|t], did this action change the Intrinsic matrix (K), the Extrinsic matrix ([R|t]), or both? Explain why.</p>
+                <h3>Question 3: The Crouch Test (Projective Geometry)</h3>
+                <img src="q3_hallway.png" alt="Hallway Projection Comparison" style="max-width: 100%; border-radius: 8px; margin-top: 15px; margin-bottom: 15px; display: block; box-shadow: 0 4px 10px rgba(31,25,90,0.08);">
+                <p>You take a photo looking straight down a long, flat hallway. The lines of the floor meet at a single Vanishing Point in the center of your image. Without changing the camera's angle, you physically crouch down closer to the floor and take a second photo. Does the Vanishing Point move UP, DOWN, or stay in the EXACT SAME pixel coordinate in the new image? Why?</p>
             </div>
             <div class="answer-section" style="margin-bottom: 30px;">
-                <label for="answer3">Question 3 Diagnosis (Matrices):</label>
-                <textarea id="answer3" name="answer3_matrices" rows="3" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;" placeholder="Type your Question 3 answer here..."></textarea>
+                <label for="answer3">Question 3 Diagnosis (Projective Geometry):</label>
+                <textarea id="answer3" name="answer3_projective" rows="3" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;" placeholder="Type your Question 3 answer here..."></textarea>
             </div>
 
             <!-- Question 4 -->
             <div class="question-block" style="margin-bottom: 15px;">
-                <h3>Question 4: Focal Length</h3>
-                <p>Without moving your camera's physical position, you swap the lens, effectively doubling the focal length. Does your Field of View (FOV) increase or decrease? What happens to the apparent size of the objects in the image?</p>
+                <h3>Question 4: The Invisible Epipoles (Epipolar Geometry)</h3>
+                <img src="q4_stereo.png" alt="Stereo Rig Epipolar Lines" style="max-width: 100%; border-radius: 8px; margin-top: 15px; margin-bottom: 15px; display: block; box-shadow: 0 4px 10px rgba(31,25,90,0.08);">
+                <p>You set up a perfect stereo rig: two identical cameras placed exactly side-by-side, looking straight ahead with perfectly parallel lenses. Where exactly is the epipole located in the left camera's image? (Hint: Think about where the right camera's center would project onto the left camera's sensor).</p>
             </div>
             <div class="answer-section" style="margin-bottom: 35px;">
-                <label for="answer4">Question 4 Diagnosis (Focal Length):</label>
-                <textarea id="answer4" name="answer4_focallength" rows="3" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;" placeholder="Type your Question 4 answer here..."></textarea>
+                <label for="answer4">Question 4 Diagnosis (Epipolar Geometry):</label>
+                <textarea id="answer4" name="answer4_epipolar" rows="3" required onpaste="return false;" oncopy="return false;" oncontextmenu="return false;" placeholder="Type your Question 4 answer here..."></textarea>
             </div>
         </div>
 
@@ -360,8 +349,11 @@
 
                 // Render challenge details to DOM
                 document.getElementById('challengeTitle').innerText = challenge.title;
-                document.getElementById('imageA').src = challenge.imageA;
-                document.getElementById('imageB').src = challenge.imageB;
+                
+                const imgAEl = document.getElementById('imageA');
+                const imgBEl = document.getElementById('imageB');
+                if (imgAEl) imgAEl.src = challenge.imageA;
+                if (imgBEl) imgBEl.src = challenge.imageB;
                 
                 const questionContentEl = document.getElementById('questionContent');
                 if (questionContentEl) {
@@ -372,8 +364,10 @@
                 challengeIdInput.value = challenge.tabName || currentChallengeId;
                 
                 // Configure descriptions
-                document.getElementById('imageADesc').innerText = currentChallengeId === 'day1' ? 'Riddled with black speckles' : 'Visual details';
-                document.getElementById('imageBDesc').innerText = currentChallengeId === 'day1' ? 'Solid, but jagged/staircase edges' : 'Visual details';
+                const descAEl = document.getElementById('imageADesc');
+                const descBEl = document.getElementById('imageBDesc');
+                if (descAEl) descAEl.innerText = currentChallengeId === 'day1' ? 'Riddled with black speckles' : 'Visual details';
+                if (descBEl) descBEl.innerText = currentChallengeId === 'day1' ? 'Solid, but jagged/staircase edges' : 'Visual details';
 
                 // Re-evaluate submission status for this specific day
                 checkSubmissionStatus(challenge);
