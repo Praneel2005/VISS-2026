@@ -427,7 +427,7 @@
                  const now = new Date();
                  const expiryDate = new Date(challenge.expiresAt);
                  if (now > expiryDate) {
-                     disableForm();
+                     disableForm(true); // Hide the form completely so content vanishes
                      messageTitle.innerText = "Assessment Period Closed";
                      messageTitle.style.color = "#d9534f";
                      messageDiv.style.background = "#fdeeee";
@@ -522,10 +522,14 @@
             });
         });
 
-        function disableForm() {
-            const inputs = form.querySelectorAll('input, textarea');
-            inputs.forEach(input => input.disabled = true);
-            submitBtn.style.display = 'none';
+        function disableForm(hideCompletely = false) {
+            if (hideCompletely) {
+                form.style.display = 'none';
+            } else {
+                const inputs = form.querySelectorAll('input, textarea');
+                inputs.forEach(input => input.disabled = true);
+                submitBtn.style.display = 'none';
+            }
             messageDiv.style.display = 'block';
         }
     });
