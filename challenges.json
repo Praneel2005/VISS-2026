@@ -2,20 +2,92 @@
   "activeChallenge": "day2",
   "challenges": {
     "day1": {
-      "title": "Day 1 Visual Drop: The 'Hole-y' Rotation Mystery",
-      "imageA": "image_A_forward.png",
-      "imageB": "image_B_backward.png",
-      "question": "Both images started as the exact same checkerboard grid and were rotated by 45 degrees.<br><br><strong>1.</strong> Which image used <em>Forward Mapping</em> and which used <em>Backward Mapping</em>?<br><strong>2.</strong> Why do the black holes appear in one, and what specific interpolation method caused the jagged lines in the other?",
+      "title": "CEVI Summer School — Day 1 Challenge",
       "tabName": "Day 1 - Rotation",
-      "expiresAt": "2026-08-18T11:05:00Z"
+      "expiresAt": "2026-08-18T11:05:00Z",
+      "questions": [
+        {
+          "id": "answer1",
+          "name": "answer1_transforms",
+          "heading": "Question 1: Image Transforms",
+          "image": "day1_checkerboard.png",
+          "imageAlt": "Image Transforms comparison",
+          "text": "Both images A and B started as the exact same checkerboard grid and were rotated by 45 degrees. Which image used Forward Mapping and which used Backward Mapping? Why do the black holes appear in one, and what specific interpolation method caused the jagged lines in the other?",
+          "placeholder": "Type your Question 1 answer here...",
+          "rows": 4
+        },
+        {
+          "id": "answer2",
+          "name": "answer2_perspective",
+          "heading": "Question 2: Perspective Projection",
+          "text": "Two identical cars are parked on a straight road. Car A is 10 meters away from your camera, and Car B is 20 meters away. In your final image, exactly how does the width of Car B (in pixels) compare to Car A? State the mathematical reason.",
+          "placeholder": "Type your Question 2 answer here...",
+          "rows": 3
+        },
+        {
+          "id": "answer3",
+          "name": "answer3_matrices",
+          "heading": "Question 3: Camera Matrices",
+          "text": "You mount your camera on a drone, fly it 50 meters into the air, and tilt it downwards to take a photo. In the camera projection matrix P = K[R|t], did this action change the Intrinsic matrix (K), the Extrinsic matrix ([R|t]), or both? Explain why.",
+          "placeholder": "Type your Question 3 answer here...",
+          "rows": 3
+        },
+        {
+          "id": "answer4",
+          "name": "answer4_focallength",
+          "heading": "Question 4: Focal Length",
+          "text": "Without moving your camera's physical position, you swap the lens, effectively doubling the focal length. Does your Field of View (FOV) increase or decrease? What happens to the apparent size of the objects in the image?",
+          "placeholder": "Type your Question 4 answer here...",
+          "rows": 3
+        }
+      ]
     },
     "day2": {
-      "title": "Day 2: Image Filtering, Restoration & Registration Projective Geometry & Camera Models",
-      "imageA": "q1_noise.png",
-      "imageB": "q2_matches.png",
-      "question": "Please answer the 4 questions regarding image filters, keypoint registration, vanishing points, and epipolar geometry.",
+      "title": "CEVI Summer School — Day 2 Challenge",
       "tabName": "Day 2 - Filters & Models",
-      "expiresAt": "2026-08-19T09:06:27Z"
+      "expiresAt": "2026-08-19T09:06:27Z",
+      "questions": [
+        {
+          "id": "answer1",
+          "name": "answer1_filtering",
+          "heading": "Question 1: The \"Smudge vs. Erase\" Dilemma (Filtering)",
+          "image": "q1_noise.png",
+          "imageAlt": "Salt and Pepper Noise",
+          "text": "An image is heavily corrupted by salt-and-pepper noise (random pure white and black pixels). Student A applies a 7x7 Gaussian Blur. Student B applies a 7x7 Median Filter. Without writing any math, describe exactly what the noise will physically look like in Student A's final image versus Student B's final image.",
+          "placeholder": "Type your Question 1 answer here...",
+          "rows": 4
+        },
+        {
+          "id": "answer2",
+          "name": "answer2_registration",
+          "heading": "Question 2: The \"Moving Bus\" Sabotage (Registration)",
+          "image": "q2_matches.png",
+          "imageAlt": "Feature Matches",
+          "text": "You are trying to stitch two photos together to make a panorama. SIFT finds 500 matching keypoints, but 50 of them are completely wrong because they attached to a bus that drove across the scene between the two shots. If you calculate the Homography using basic Least Squares on all 500 points, what will the final stitched panorama look like? Name the specific algorithm you must use to ignore the bus.",
+          "placeholder": "Type your Question 2 answer here...",
+          "rows": 3
+        },
+        {
+          "id": "answer3",
+          "name": "answer3_projective",
+          "heading": "Question 3: The Crouch Test (Projective Geometry)",
+          "image": "q3_hallway.png",
+          "imageAlt": "Hallway Projection Comparison",
+          "text": "You take a photo looking straight down a long, flat hallway. The lines of the floor meet at a single Vanishing Point in the center of your image. Without changing the camera's angle, you physically crouch down closer to the floor and take a second photo. Does the Vanishing Point move UP, DOWN, or stay in the EXACT SAME pixel coordinate in the new image? Why?",
+          "placeholder": "Type your Question 3 answer here...",
+          "rows": 3
+        },
+        {
+          "id": "answer4",
+          "name": "answer4_epipolar",
+          "heading": "Question 4: The Invisible Epipoles (Epipolar Geometry)",
+          "image": "q4_stereo.png",
+          "imageAlt": "Stereo Rig Epipolar Lines",
+          "text": "You set up a perfect stereo rig: two identical cameras placed exactly side-by-side, looking straight ahead with perfectly parallel lenses. Where exactly is the epipole located in the left camera's image? (Hint: Think about where the right camera's center would project onto the left camera's sensor).",
+          "placeholder": "Type your Question 4 answer here...",
+          "rows": 3
+        }
+      ]
     }
   }
 }
