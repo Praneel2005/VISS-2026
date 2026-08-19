@@ -1,5 +1,5 @@
 {
-  "activeChallenge": "day2",
+  "activeChallenge": "day3",
   "challenges": {
     "day1": {
       "title": "CEVI Summer School — Day 1 Challenge",
@@ -85,6 +85,29 @@
           "imageAlt": "Stereo Rig Epipolar Lines",
           "text": "You set up a perfect stereo rig: two identical cameras placed exactly side-by-side, looking straight ahead with perfectly parallel lenses. Where exactly is the epipole located in the left camera's image? (Hint: Think about where the right camera's center would project onto the left camera's sensor).",
           "placeholder": "Type your Question 4 answer here...",
+          "rows": 3
+        }
+      ]
+    },
+    "day3": {
+      "title": "CEVI Summer School — Day 3 Mock Sandbox",
+      "tabName": "Day 3 - Telemetry Sandbox",
+      "expiresAt": "2026-08-20T12:55:36Z",
+      "questions": [
+        {
+          "id": "answer1",
+          "name": "answer1_dummy",
+          "heading": "Question 1: Image Processing Sandbox",
+          "text": "This is a placeholder question for testing anti-malpractice telemetry. Try copying this text or switching tabs to test the alerts.",
+          "placeholder": "Type your Question 1 answer here...",
+          "rows": 3
+        },
+        {
+          "id": "answer2",
+          "name": "answer2_dummy",
+          "heading": "Question 2: Security Violations Test",
+          "text": "Try exiting fullscreen 3 times to verify that the form locks down and hides all contents completely.",
+          "placeholder": "Type your Question 2 answer here...",
           "rows": 3
         }
       ]
