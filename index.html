@@ -18,7 +18,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1300px;
             margin: 0 auto;
             background: #ffffff;
             padding: 48px;
@@ -206,8 +206,8 @@
 
         .exam-layout {
             display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 30px;
+            grid-template-columns: 1fr 3fr;
+            gap: 40px;
             margin-top: 30px;
             align-items: start;
         }
@@ -219,6 +219,18 @@
             position: sticky;
             top: 20px;
             box-shadow: 0 4px 12px rgba(31,25,90,0.03);
+        }
+        .attempted-badge {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
         .sidebar-title {
             font-size: 13px;
@@ -257,6 +269,8 @@
         }
         .exam-content {
             min-width: 0; /* Prevent grid breakout */
+            border-left: 2px solid #e2e8f0;
+            padding-left: 40px;
         }
 
         @media (max-width: 768px) {
@@ -267,6 +281,12 @@
                 position: relative;
                 top: 0;
                 margin-bottom: 20px;
+            }
+            .exam-content {
+                border-left: none;
+                padding-left: 0;
+                border-top: 2px solid #e2e8f0;
+                padding-top: 20px;
             }
         }
 
@@ -346,6 +366,7 @@
         <div class="exam-layout">
             <!-- Sidebar Navigation -->
             <div class="exam-sidebar">
+                <div class="attempted-badge">Attempted: <span id="attemptedCount">0</span> / <span id="totalQuestionsCount">--</span></div>
                 <div class="sidebar-title">Assessment Sections</div>
                 <div class="nav-tab active" data-target="sec_conceptual">📝 Simple Conceptual</div>
                 <div class="nav-tab" data-target="sec_mcq">🖼️ MCQs & Visuals</div>
@@ -669,6 +690,14 @@
                     });
                 });
 
+                // Initialize attempted count and hook event listener
+                updateAttemptedCount();
+                questionsContainer.addEventListener('input', function(e) {
+                    if (e.target.tagName === 'TEXTAREA') {
+                        updateAttemptedCount();
+                    }
+                });
+
                 // Re-evaluate submission status for this specific day
                 checkSubmissionStatus(challenge);
 
@@ -850,6 +879,21 @@
                 submitBtn.style.display = 'none';
             }
             messageDiv.style.display = 'block';
+        }
+
+        function updateAttemptedCount() {
+            const textareas = document.querySelectorAll('.answer-section textarea');
+            const total = textareas.length;
+            let attempted = 0;
+            textareas.forEach(ta => {
+                if (ta.value.trim() !== '') {
+                    attempted++;
+                }
+            });
+            const attemptedEl = document.getElementById('attemptedCount');
+            const totalEl = document.getElementById('totalQuestionsCount');
+            if (attemptedEl) attemptedEl.innerText = attempted;
+            if (totalEl) totalEl.innerText = total;
         }
     });
 </script>
