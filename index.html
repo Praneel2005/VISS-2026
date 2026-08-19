@@ -368,7 +368,7 @@
             <div class="exam-sidebar">
                 <div class="attempted-badge">Attempted: <span id="attemptedCount">0</span> / <span id="totalQuestionsCount">--</span></div>
                 <div class="sidebar-title">Assessment Sections</div>
-                <div class="nav-tab active" data-target="sec_conceptual">📝 Simple Conceptual</div>
+                <div class="nav-tab" data-target="sec_conceptual">📝 Simple Conceptual</div>
                 <div class="nav-tab" data-target="sec_mcq">🖼️ MCQs & Visuals</div>
                 <div class="nav-tab" data-target="sec_numerical">🔢 Numerical Problems</div>
                 <div class="nav-tab" data-target="sec_matching">🔗 Match & Proofs</div>
@@ -378,6 +378,11 @@
             <div class="exam-content">
                 <div class="assessment-section">
                     <span class="anti-cheat-warning" style="margin-bottom: 25px;">⚠️ Note: Copy-pasting is strictly disabled. You must type your own answers.</span>
+                    
+                    <div id="selectSectionPlaceholder" style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 45px 30px; text-align: center; color: #64748b; font-size: 16px; font-weight: 700; margin-top: 15px; margin-bottom: 20px; font-family: 'Segoe UI', sans-serif;">
+                        👈 Please select an assessment section from the left sidebar to view and answer the questions.
+                    </div>
+                    
                     <div id="questionsContainer"><!-- questions injected by JS from challenges.json --></div>
                 </div>
             </div>
@@ -611,60 +616,88 @@
                 const isCategorized = (challenge.questions || []).some(q => q.category);
                 const sidebarEl = document.querySelector('.exam-sidebar');
                 const layoutEl = document.querySelector('.exam-layout');
+                const placeholderEl = document.getElementById('selectSectionPlaceholder');
                 
                 if (isCategorized) {
                     if (sidebarEl) sidebarEl.style.display = 'block';
                     if (layoutEl) {
-                        layoutEl.style.gridTemplateColumns = window.innerWidth > 768 ? '280px 1fr' : '1fr';
+                        layoutEl.style.gridTemplateColumns = window.innerWidth > 768 ? '1fr 3fr' : '1fr';
                     }
-                    // Hide other categories initially
+                    if (placeholderEl) placeholderEl.style.display = 'block';
+                    
+                    // Hide all categories initially — student must select one first
+                    sections.conceptual.style.display = 'none';
                     sections.mcq.style.display = 'none';
                     sections.numerical.style.display = 'none';
                     sections.matching.style.display = 'none';
-                    sections.conceptual.style.display = 'block';
                 } else {
                     if (sidebarEl) sidebarEl.style.display = 'none';
                     if (layoutEl) layoutEl.style.gridTemplateColumns = '1fr';
-                    // Show all elements inside conceptual
+                    if (placeholderEl) placeholderEl.style.display = 'none';
+                    // Show conceptual containing all questions
                     sections.conceptual.style.display = 'block';
                 }
 
-                (challenge.questions || []).forEach((q, idx) => {
-                    const block = document.createElement('div');
-                    block.className = 'question-block';
-                    block.style.marginBottom = '15px';
-                    block.innerHTML =
-                        '<h3>' + escapeHtml(q.heading) + '</h3>' +
-                        (q.image ? '<img src="' + escapeAttr(q.image) + '" alt="' + escapeAttr(q.imageAlt || '') +
-                            '" style="max-width:100%;border-radius:8px;margin-top:15px;margin-bottom:15px;display:block;box-shadow:0 4px 10px rgba(31,25,90,0.08);">' : '') +
-                        '<p>' + escapeHtml(q.text) + '</p>';
+                // Partition questions by category to ensure continuous sequential numbering in display order
+                const categoriesOrder = ['conceptual', 'mcq', 'numerical', 'matching'];
+                const partitionedQuestions = {
+                    conceptual: [],
+                    mcq: [],
+                    numerical: [],
+                    matching: []
+                };
 
-                    const answerWrap = document.createElement('div');
-                    answerWrap.className = 'answer-section';
-                    answerWrap.style.marginBottom = '30px';
+                (challenge.questions || []).forEach(q => {
+                    const cat = q.category || 'conceptual';
+                    if (partitionedQuestions[cat]) {
+                        partitionedQuestions[cat].push(q);
+                    } else {
+                        partitionedQuestions.conceptual.push(q);
+                    }
+                });
 
-                    const label = document.createElement('label');
-                    label.setAttribute('for', q.id);
-                    label.innerText = 'Question ' + (idx + 1) + ' Answer:';
-                    answerWrap.appendChild(label);
-
-                    const ta = document.createElement('textarea');
-                    ta.id = q.id;
-                    ta.name = q.name;
-                    ta.rows = q.rows || 3;
-                    ta.required = true;
-                    ta.placeholder = q.placeholder || 'Type your answer here...';
-                    ta.setAttribute('onpaste', 'return false;');
-                    ta.setAttribute('oncopy', 'return false;');
-                    ta.setAttribute('oncontextmenu', 'return false;');
-                    answerWrap.appendChild(ta);
-
-                    // Determine targeting container
-                    const cat = (isCategorized && q.category) ? q.category : 'conceptual';
-                    const targetSec = sections[cat] || sections.conceptual;
+                let globalIndex = 0;
+                categoriesOrder.forEach(cat => {
+                    const targetSec = sections[cat];
+                    const qList = partitionedQuestions[cat];
                     
-                    targetSec.appendChild(block);
-                    targetSec.appendChild(answerWrap);
+                    qList.forEach(q => {
+                        globalIndex++;
+                        
+                        const block = document.createElement('div');
+                        block.className = 'question-block';
+                        block.style.marginBottom = '15px';
+                        block.innerHTML =
+                            '<h3>' + escapeHtml(q.heading) + '</h3>' +
+                            (q.image ? '<img src="' + escapeAttr(q.image) + '" alt="' + escapeAttr(q.imageAlt || '') +
+                                '" style="max-width:100%;border-radius:8px;margin-top:15px;margin-bottom:15px;display:block;box-shadow:0 4px 10px rgba(31,25,90,0.08);">' : '') +
+                            '<p>' + escapeHtml(q.text) + '</p>';
+
+                        const answerWrap = document.createElement('div');
+                        answerWrap.className = 'answer-section';
+                        answerWrap.style.marginBottom = '30px';
+
+                        const label = document.createElement('label');
+                        label.setAttribute('for', q.id);
+                        label.innerText = 'Question ' + globalIndex + ' Answer:';
+                        answerWrap.appendChild(label);
+
+                        const ta = document.createElement('textarea');
+                        ta.id = q.id;
+                        ta.name = q.name;
+                        ta.rows = q.rows || 3;
+                        ta.required = true;
+                        ta.placeholder = q.placeholder || 'Type your answer here...';
+                        ta.setAttribute('onpaste', 'return false;');
+                        ta.setAttribute('oncopy', 'return false;');
+                        ta.setAttribute('oncontextmenu', 'return false;');
+                        answerWrap.appendChild(ta);
+
+                        // Determine targeting container
+                        const targetContainer = isCategorized ? targetSec : sections.conceptual;
+                        targetContainer.appendChild(block);
+                        targetContainer.appendChild(answerWrap);
+                    });
                 });
                 
                 // Register tab trigger navigation
@@ -672,6 +705,9 @@
                 tabs.forEach(tab => {
                     tab.addEventListener('click', function() {
                         if (!isCategorized) return;
+                        
+                        // Hide placeholder
+                        if (placeholderEl) placeholderEl.style.display = 'none';
                         
                         tabs.forEach(t => t.classList.remove('active'));
                         this.classList.add('active');
