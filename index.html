@@ -664,11 +664,17 @@
                     qList.forEach(q => {
                         globalIndex++;
                         
+                        // Strip out any hardcoded "Question X:" prefix to allow dynamic sequential numbering
+                        let cleanHeading = q.heading;
+                        if (cleanHeading.indexOf(':') !== -1 && cleanHeading.toLowerCase().startsWith('question')) {
+                            cleanHeading = cleanHeading.substring(cleanHeading.indexOf(':') + 1).trim();
+                        }
+
                         const block = document.createElement('div');
                         block.className = 'question-block';
                         block.style.marginBottom = '15px';
                         block.innerHTML =
-                            '<h3>' + escapeHtml(q.heading) + '</h3>' +
+                            '<h3>Question ' + globalIndex + ': ' + escapeHtml(cleanHeading) + '</h3>' +
                             (q.image ? '<img src="' + escapeAttr(q.image) + '" alt="' + escapeAttr(q.imageAlt || '') +
                                 '" style="max-width:100%;border-radius:8px;margin-top:15px;margin-bottom:15px;display:block;box-shadow:0 4px 10px rgba(31,25,90,0.08);">' : '') +
                             '<p>' + escapeHtml(q.text) + '</p>';
