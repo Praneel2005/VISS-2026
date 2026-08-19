@@ -204,6 +204,72 @@
         }
         button:active { transform: translateY(0); }
 
+        .exam-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            margin-top: 30px;
+            align-items: start;
+        }
+        .exam-sidebar {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            position: sticky;
+            top: 20px;
+            box-shadow: 0 4px 12px rgba(31,25,90,0.03);
+        }
+        .sidebar-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .nav-tab {
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid transparent;
+        }
+        .nav-tab:hover {
+            background: #f1f5f9;
+            color: #6a5cf5;
+            border-color: #e2e8f0;
+        }
+        .nav-tab.active {
+            background: linear-gradient(90deg, #6a5cf5, #3f8efc);
+            color: white;
+            box-shadow: 0 4px 12px rgba(106,92,245,0.25);
+            border-color: transparent;
+        }
+        .exam-content {
+            min-width: 0; /* Prevent grid breakout */
+        }
+
+        @media (max-width: 768px) {
+            .exam-layout {
+                grid-template-columns: 1fr;
+            }
+            .exam-sidebar {
+                position: relative;
+                top: 0;
+                margin-bottom: 20px;
+            }
+        }
+
         @media (max-width: 640px) {
             .container { padding: 26px; }
             .student-details { grid-template-columns: 1fr; }
@@ -276,12 +342,24 @@
             </div>
         </div>
 
-        <!-- Assessment Section: fully dynamic, populated from challenges.json.
-             DO NOT hardcode questions here anymore — edit challenges.json instead. -->
-        <div class="assessment-section">
-            <span class="anti-cheat-warning" style="margin-bottom: 25px;">⚠️ Note: Copy-pasting is strictly disabled. You must type your own answers.</span>
-
-            <div id="questionsContainer"><!-- questions injected by JS from challenges.json --></div>
+        <!-- Exam Layout Grid -->
+        <div class="exam-layout">
+            <!-- Sidebar Navigation -->
+            <div class="exam-sidebar">
+                <div class="sidebar-title">Assessment Sections</div>
+                <div class="nav-tab active" data-target="sec_conceptual">📝 Simple Conceptual</div>
+                <div class="nav-tab" data-target="sec_mcq">🖼️ MCQs & Visuals</div>
+                <div class="nav-tab" data-target="sec_numerical">🔢 Numerical Problems</div>
+                <div class="nav-tab" data-target="sec_matching">🔗 Match & Proofs</div>
+            </div>
+            
+            <!-- Main Content Area -->
+            <div class="exam-content">
+                <div class="assessment-section">
+                    <span class="anti-cheat-warning" style="margin-bottom: 25px;">⚠️ Note: Copy-pasting is strictly disabled. You must type your own answers.</span>
+                    <div id="questionsContainer"><!-- questions injected by JS from challenges.json --></div>
+                </div>
+            </div>
         </div>
 
         <button type="submit" id="submitBtn">Submit Assessment</button>
@@ -490,18 +568,55 @@
                 // Set sheet routing property (which tab/sheet this submission goes to)
                 challengeIdInput.value = challenge.tabName || currentChallengeId;
 
-                // Render ALL questions dynamically — never hardcode these in the HTML.
+                // Group questions by section/category
+                const sections = {
+                    conceptual: document.createElement('div'),
+                    mcq: document.createElement('div'),
+                    numerical: document.createElement('div'),
+                    matching: document.createElement('div')
+                };
+                
+                // Set IDs on category containers
+                sections.conceptual.id = 'sec_conceptual';
+                sections.mcq.id = 'sec_mcq';
+                sections.numerical.id = 'sec_numerical';
+                sections.matching.id = 'sec_matching';
+                
+                // Clear container and append category divisions
                 questionsContainer.innerHTML = '';
+                Object.values(sections).forEach(sec => questionsContainer.appendChild(sec));
+                
+                // Determine if we should show the sidebar navigation
+                const isCategorized = (challenge.questions || []).some(q => q.category);
+                const sidebarEl = document.querySelector('.exam-sidebar');
+                const layoutEl = document.querySelector('.exam-layout');
+                
+                if (isCategorized) {
+                    if (sidebarEl) sidebarEl.style.display = 'block';
+                    if (layoutEl) {
+                        layoutEl.style.gridTemplateColumns = window.innerWidth > 768 ? '280px 1fr' : '1fr';
+                    }
+                    // Hide other categories initially
+                    sections.mcq.style.display = 'none';
+                    sections.numerical.style.display = 'none';
+                    sections.matching.style.display = 'none';
+                    sections.conceptual.style.display = 'block';
+                } else {
+                    if (sidebarEl) sidebarEl.style.display = 'none';
+                    if (layoutEl) layoutEl.style.gridTemplateColumns = '1fr';
+                    // Show all elements inside conceptual
+                    sections.conceptual.style.display = 'block';
+                }
+
                 (challenge.questions || []).forEach((q, idx) => {
                     const block = document.createElement('div');
                     block.className = 'question-block';
-                    block.style.marginbottom = '15px';
+                    block.style.marginBottom = '15px';
                     block.innerHTML =
                         '<h3>' + escapeHtml(q.heading) + '</h3>' +
                         (q.image ? '<img src="' + escapeAttr(q.image) + '" alt="' + escapeAttr(q.imageAlt || '') +
                             '" style="max-width:100%;border-radius:8px;margin-top:15px;margin-bottom:15px;display:block;box-shadow:0 4px 10px rgba(31,25,90,0.08);">' : '') +
                         '<p>' + escapeHtml(q.text) + '</p>';
-                    questionsContainer.appendChild(block);
 
                     const answerWrap = document.createElement('div');
                     answerWrap.className = 'answer-section';
@@ -523,7 +638,35 @@
                     ta.setAttribute('oncontextmenu', 'return false;');
                     answerWrap.appendChild(ta);
 
-                    questionsContainer.appendChild(answerWrap);
+                    // Determine targeting container
+                    const cat = (isCategorized && q.category) ? q.category : 'conceptual';
+                    const targetSec = sections[cat] || sections.conceptual;
+                    
+                    targetSec.appendChild(block);
+                    targetSec.appendChild(answerWrap);
+                });
+                
+                // Register tab trigger navigation
+                const tabs = document.querySelectorAll('.nav-tab');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        if (!isCategorized) return;
+                        
+                        tabs.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        const targetId = this.getAttribute('data-target');
+                        Object.keys(sections).forEach(k => {
+                            const secId = 'sec_' + k;
+                            const el = document.getElementById(secId);
+                            if (el) el.style.display = (secId === targetId) ? 'block' : 'none';
+                        });
+                        
+                        // Scroll to top of questions area on mobile
+                        if (window.innerWidth <= 768) {
+                            questionsContainer.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    });
                 });
 
                 // Re-evaluate submission status for this specific day

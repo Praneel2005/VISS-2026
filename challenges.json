@@ -1,5 +1,5 @@
 {
-  "activeChallenge": "day3",
+  "activeChallenge": "overall",
   "challenges": {
     "day1": {
       "title": "CEVI Summer School — Day 1 Challenge",
@@ -108,6 +108,289 @@
           "heading": "Question 2: Security Violations Test",
           "text": "Try exiting fullscreen 3 times to verify that the form locks down and hides all contents completely.",
           "placeholder": "Type your Question 2 answer here...",
+          "rows": 3
+        }
+      ]
+    },
+    "overall": {
+      "title": "CEVI Summer School — Comprehensive Final Assessment",
+      "tabName": "Final Assessment",
+      "expiresAt": "2026-08-25T18:00:00+05:30",
+      "questions": [
+        {
+          "id": "answer1",
+          "name": "answer1_fovea",
+          "category": "conceptual",
+          "heading": "Question 1: Fovea vs. Peripheral Vision Sampling",
+          "text": "The human retina does not sample light uniformly. The fovea contains a dense packing of cone photoreceptors, while rod density peaks in the periphery. According to the Nyquist-Shannon sampling theorem, if a high-frequency spatial pattern (like a fine-striped shirt) is projected onto your peripheral retina, what optical phenomenon occurs, and why doesn't this happen when you look at it directly?",
+          "placeholder": "Identify the optical phenomenon and explain using spatial sampling frequency and Nyquist limit...",
+          "rows": 4
+        },
+        {
+          "id": "answer2",
+          "name": "answer2_optimal_pinhole",
+          "category": "numerical",
+          "heading": "Question 2: The Optimal Pinhole Trade-Off",
+          "text": "In a pinhole camera, if the pinhole is too large, the image is blurred by geometric projection. If the pinhole is too small, the image is blurred due to light wave diffraction. Rayleigh's criterion suggests the optimal pinhole diameter d can be approximated by d ≈ 1.9 * sqrt(f * λ), where f is the distance to the sensor and λ is the wavelength of light. Calculate the optimal pinhole diameter (in millimeters) for green light (λ = 550 nm) when the camera sensor is placed exactly 10 cm behind the pinhole. Show your calculations.",
+          "placeholder": "State your final numerical answer in mm and write your step-by-step calculations here...",
+          "rows": 4
+        },
+        {
+          "id": "answer3",
+          "name": "answer3_fov_scaling",
+          "category": "mcq",
+          "heading": "Question 3: Field of View (FOV) Scaling",
+          "text": "You are shooting a scene. You decide to swap your camera sensor for one that is exactly twice as wide (doubling the sensor width W). To keep the composition unchanged, you simultaneously swap your lens for one with double the focal length (doubling f). Using the horizontal FOV formula FOV = 2 * arctan(W / 2f), choose the correct statement:\n\n[A] The FOV increases by a factor of 2.\n[B] The FOV decreases by a factor of 2.\n[C] The FOV stays exactly the same.\n[D] The FOV increases by a factor of sqrt(2).\n\nState your choice (A, B, C, or D) and prove your answer mathematically.",
+          "placeholder": "Select your option and write your mathematical proof here...",
+          "rows": 4
+        },
+        {
+          "id": "answer4",
+          "name": "answer4_aliasing_vs_contouring",
+          "category": "conceptual",
+          "heading": "Question 4: Spatial vs. Amplitude Resolution",
+          "text": "An image is degraded in two separate experiments: (A) It is downsampled by a factor of 8 without pre-filtering, and (B) It is re-quantized from 8-bit (256 levels) to 1-bit (2 levels). Identify which experiment produces 'false contouring' and which experiment produces 'spatial aliasing' (jagged edges). Explain the physical causes of both.",
+          "placeholder": "Explain the mappings of both Experiment A and B and identify their respective artifacts...",
+          "rows": 4
+        },
+        {
+          "id": "answer5",
+          "name": "answer5_contrast_stretch",
+          "category": "numerical",
+          "heading": "Question 5: Linear Contrast Stretching",
+          "text": "You want to perform linear contrast stretching on a normalized gray-scale image. The active pixel intensities range from a minimum of r_min = 0.2 to a maximum of r_max = 0.6. The target output range is s_min = 0 to s_max = 1.0. Write the linear mapping formula s = T(r) and calculate the exact output value s for an input pixel intensity of r = 0.3.",
+          "placeholder": "State the mapping equation and calculate the output value for r = 0.3...",
+          "rows": 3
+        },
+        {
+          "id": "answer6",
+          "name": "answer6_equalization_flat",
+          "category": "conceptual",
+          "heading": "Question 6: Discrete Histogram Equalization Limits",
+          "text": "Why is it mathematically impossible to obtain a perfectly flat, uniform histogram when applying histogram equalization to a discrete, digital image? What happens to the intensity bins?",
+          "placeholder": "Explain using discrete distributions, finite pixel populations, and bin redistribution constraints...",
+          "rows": 3
+        },
+        {
+          "id": "answer7",
+          "name": "answer7_matching_mapping",
+          "category": "conceptual",
+          "heading": "Question 7: Histogram Matching Mapping",
+          "text": "In histogram matching (specification), we transform an input image Ix so its histogram matches a target image Iy. The mapping uses the intermediate mapping function z = G^-1(S(r)). Explain step-by-step what the variables r, S(r), and G(z) represent, and how the inverse function G^-1 completes the mapping.",
+          "placeholder": "Describe r, S(r), G(z) and the role of G^-1 in matching intensity distributions...",
+          "rows": 4
+        },
+        {
+          "id": "answer8",
+          "name": "answer8_mapping_modes",
+          "category": "matching",
+          "heading": "Question 8: Geometric Transform Mapping Modes",
+          "text": "Match the following image mapping concepts with their respective definitions:\n\n1. Forward Mapping\n2. Backward Mapping\n3. Bilinear Interpolation\n4. Nearest-Neighbor Interpolation\n\nDefinitions:\n[A] Resolves destination pixel values by calculating a weighted average of the 4 closest source pixels.\n[B] Iterates through destination coordinates and applies the inverse transform to find corresponding source pixels, preventing holes.\n[C] Selects the single nearest pixel coordinate, causing jagged ('staircase') edges.\n[D] Iterates through source coordinates and projects them onto the destination grid, occasionally leaving 'holes' or unmapped pixels.\n\nState your match mapping (e.g., 1-X, 2-Y, 3-Z, 4-W).",
+          "placeholder": "List your match pairs here...",
+          "rows": 3
+        },
+        {
+          "id": "answer9",
+          "name": "answer9_histogram_visual",
+          "category": "mcq",
+          "heading": "Question 9: Match the Histograms",
+          "image": "overall_q9_histograms.png",
+          "imageAlt": "Histogram comparison",
+          "text": "Refer to the image above showing three input images (Image A, Image B, Image C) and three corresponding histograms (Histogram 1, Histogram 2, Histogram 3). Identify which histogram belongs to which image, and justify your choices based on their pixel distributions.",
+          "placeholder": "State your image-to-histogram matches and explain the contrast/intensity distributions...",
+          "rows": 4
+        },
+        {
+          "id": "answer10",
+          "name": "answer10_aperture_dof",
+          "category": "conceptual",
+          "heading": "Question 10: Aperture vs. Depth of Field (DoF)",
+          "text": "A photographer switches their camera aperture setting from f/2.8 to f/16 while adjusting exposure time to keep brightness constant. What happens to the Depth of Field (DoF) and the sharpness of background details? Explain the physical reason using the concept of 'circles of confusion'.",
+          "placeholder": "Explain the change in DoF and background details, referencing light cones and circles of confusion...",
+          "rows": 4
+        },
+        {
+          "id": "answer11",
+          "name": "answer11_kernel_class",
+          "category": "numerical",
+          "heading": "Question 11: Linear Kernel Classification",
+          "text": "Consider the two spatial kernels:\n\nKernel 1 = (1/16) * [[1, 2, 1], [2, 4, 2], [1, 2, 1]]\nKernel 2 = [[0, -1, 0], [-1, 5, -1], [0, -1, 0]]\n\nClassify each kernel as a Low-pass filter (smoothing) or a High-pass filter (sharpening/edge enhancement). Justify your answer by calculating the sum of the coefficients and analyzing their center-to-edge weighting.",
+          "placeholder": "State the classification of both kernels and write your calculations...",
+          "rows": 4
+        },
+        {
+          "id": "answer12",
+          "name": "answer12_median_vs_box",
+          "category": "conceptual",
+          "heading": "Question 12: Why Median Filters Excel at Impulse Noise",
+          "text": "Explain why a non-linear 3x3 Median Filter is dramatically more effective at removing salt-and-pepper (impulse) noise than a linear 3x3 Box Filter, which instead smudges the noise. Answer using the mathematical properties of the mean vs. the median in the presence of extreme outliers.",
+          "placeholder": "Explain how Box (mean) and Median filters handle extreme intensity spikes (0 and 255)...",
+          "rows": 4
+        },
+        {
+          "id": "answer13",
+          "name": "answer13_fft_frequencies",
+          "category": "conceptual",
+          "heading": "Question 13: Edge Representations in the Fourier Spectrum",
+          "text": "You transform an image of a square room into the frequency domain using the Fast Fourier Transform (FFT). Where do the sharp boundaries of the walls show up in the Fourier magnitude spectrum: close to the center (origin) or far from the center? Explain what a Low-Pass Filter in the frequency domain physically does to these wall boundaries.",
+          "placeholder": "Describe the location of edges in FFT spectrum and what LPF filtering does to them...",
+          "rows": 4
+        },
+        {
+          "id": "answer14",
+          "name": "answer14_unsharp_mask",
+          "category": "matching",
+          "heading": "Question 14: Unsharp Masking Mechanics",
+          "text": "Unsharp masking is defined by the formula g(x,y) = f(x,y) + k * g_mask(x,y), where f(x,y) is the input image and k is a scaling factor. Write the mathematical formula for g_mask(x,y) in terms of f(x,y) and a blurred version f_bar(x,y). Explain how adding this mask sharpens the edges.",
+          "placeholder": "State the g_mask(x,y) equation and write your explanation...",
+          "rows": 3
+        },
+        {
+          "id": "answer15",
+          "name": "answer15_noise_causes",
+          "category": "matching",
+          "heading": "Question 15: Physical Causes of Noise Models",
+          "text": "Match the following noise models with their typical physical causes in imaging systems:\n\n1. Gaussian Noise\n2. Salt-and-Pepper Noise\n3. Rayleigh Noise\n4. Poisson (Shot) Noise\n\nPhysical Causes:\n[A] Occurs due to photon quantization, especially prominent in low-light imaging.\n[B] Typically caused by thermal fluctuations in electronic circuits during capture.\n[C] Caused by transmission errors, faulty CCD sensor pixels, or analog-to-digital converter glitches.\n[D] Often models the noise envelope in range-imaging sensors, radar, and ultrasound scans.\n\nState your match mapping (e.g., 1-X, 2-Y, 3-Z, 4-W).",
+          "placeholder": "List your match pairs here...",
+          "rows": 3
+        },
+        {
+          "id": "answer16",
+          "name": "answer16_registration_points",
+          "category": "numerical",
+          "heading": "Question 16: Minimum Points for Registration",
+          "text": "You want to align two images. If you assume an Affine transformation model, what is the minimum number of matching point pairs required to solve for the matrix? If you assume a Homography (Projective) transformation, what is the minimum number of matching point pairs required? Explain in terms of the Degrees of Freedom (DoF) for each transformation.",
+          "placeholder": "State the minimum number of points for both Affine and Homography, and show your reasoning...",
+          "rows": 4
+        },
+        {
+          "id": "answer17",
+          "name": "answer17_mutual_info",
+          "category": "conceptual",
+          "heading": "Question 17: SSD vs. Mutual Information",
+          "text": "In intensity-based image registration, we align images by optimizing a global similarity metric. Why is the Sum of Squared Differences (SSD) metric completely unsuitable for aligning a brain MRI scan with a brain CT scan of the same patient, whereas Mutual Information (MI) works exceptionally well? Explain the core difference in what these metrics measure.",
+          "placeholder": "Contrast SSD (identical intensity assumption) vs Mutual Information (entropy/co-occurrence dependency)...",
+          "rows": 4
+        },
+        {
+          "id": "answer18",
+          "name": "answer18_dog_ пирамида",
+          "category": "conceptual",
+          "heading": "Question 18: SIFT Scale Space Approximation",
+          "text": "In feature-based registration algorithms like SIFT, keypoints must be detected at multiple scales. SIFT uses a 'Difference of Gaussians' (DoG) pyramid to find stable keypoints. What mathematically rigorous operator does the DoG approximate, and why does SIFT use DoG instead of calculating that operator directly?",
+          "placeholder": "State the operator and explain the computational efficiency benefits...",
+          "rows": 4
+        },
+        {
+          "id": "answer19",
+          "name": "answer19_frequency_visual",
+          "category": "mcq",
+          "heading": "Question 19: Identify the Frequency Filter",
+          "image": "overall_q19_frequency.png",
+          "imageAlt": "Frequency domain filter masks",
+          "text": "Refer to the two frequency domain filter masks above. Describe what spatial frequencies Mask 1 and Mask 2 pass through. If you apply Mask 1 to an image, will the spatial domain result look blurry or sharpened? Explain.",
+          "placeholder": "Identify the low/high pass nature of both masks and describe the visual effect of Mask 1...",
+          "rows": 4
+        },
+        {
+          "id": "answer20",
+          "name": "answer20_wiener_filter",
+          "category": "conceptual",
+          "heading": "Question 20: Wiener Filtering Noise Mitigation",
+          "text": "During image restoration, why does standard Inverse Filtering perform terribly in the presence of noise, and how does the Wiener Filter mathematically overcome this issue? Focus on the role of the noise-to-signal power spectrum ratio.",
+          "placeholder": "Explain inverse filtering noise amplification and how the Wiener denominator ratio stabilizes it...",
+          "rows": 4
+        },
+        {
+          "id": "answer21",
+          "name": "answer21_homogeneous_conv",
+          "category": "numerical",
+          "heading": "Question 21: Conversions in Projective Space",
+          "text": "1. Convert the Homogeneous coordinate point P = [8, 12, 4]^T into its Euclidean (Cartesian) coordinate counterpart.\n2. In homogeneous coordinates, what physical geometric concept is represented by the point Q = [2, -7, 0]^T?",
+          "placeholder": "State your Euclidean coordinates and define the geometric concept of Q...",
+          "rows": 3
+        },
+        {
+          "id": "answer22",
+          "name": "answer22_parallel_intersect",
+          "category": "matching",
+          "heading": "Question 22: Intersection of Parallel Lines",
+          "text": "In 2D projective geometry, parallel lines meet at infinity. Consider two parallel lines in Cartesian coordinates: y = 2x + 1 and y = 2x + 3. Convert these lines into homogeneous representations l1 and l2. Calculate their intersection point x = l1 x l2 using the cross product, and prove that it lies on the line at infinity l_inf = [0, 0, 1]^T.",
+          "placeholder": "Show conversion, cross product steps, and verify dot product with l_inf...",
+          "rows": 4
+        },
+        {
+          "id": "answer23",
+          "name": "answer23_vanishing_horizon",
+          "category": "mcq",
+          "heading": "Question 23: Vanishing Points and Camera Tilt",
+          "text": "You are standing on a street looking straight down a flat, level road. The parallel edges of the sidewalk meet at a vanishing point on the horizon line in your image. Keeping the camera in the exact same physical spot, you tilt the camera axis upwards by 15 degrees. Choose the correct statement:\n\n[A] The vanishing point moves UP in the new image.\n[B] The vanishing point moves DOWN in the new image.\n[C] The vanishing point stays in the EXACT SAME pixel coordinate.\n[D] The vanishing point disappears entirely.\n\nState your choice (A, B, C, or D) and explain the geometric reason.",
+          "placeholder": "Select your option and explain the shift relative to the horizon line...",
+          "rows": 4
+        },
+        {
+          "id": "answer24",
+          "name": "answer24_camera_translation",
+          "category": "conceptual",
+          "heading": "Question 24: Projective Matrix Transformations",
+          "text": "A camera projection matrix is defined as P = K[R|t]. You translate the camera physically to the right by 3 meters and rotate it by 10 degrees about its optical axis. Which component matrices of P (Intrinsic matrix K, Extrinsic rotation R, or Extrinsic translation t) are modified by this action? Explain.",
+          "placeholder": "Identify modified matrices and explain why intrinsic parameters remain constant...",
+          "rows": 4
+        },
+        {
+          "id": "answer25",
+          "name": "answer25_intrinsic_anatomy",
+          "category": "conceptual",
+          "heading": "Question 25: Anatomy of the Intrinsic Matrix K",
+          "text": "Let the intrinsic camera matrix K be represented as:\n\nK = [[f_x, s, x_0], [0, f_y, y_0], [0, 0, 1]]\n\nIdentify what physical parameters of the camera sensor/lens are represented by:\n1. f_x and f_y (and why they might differ slightly)\n2. x_0 and y_0\n3. s",
+          "placeholder": "Explain the parameters, pixel dimensions, principal point, and skew angle...",
+          "rows": 4
+        },
+        {
+          "id": "answer26",
+          "name": "answer26_distortion_match",
+          "category": "matching",
+          "heading": "Question 26: Barrel, Pincushion, and Tangential Distortion",
+          "text": "Match the following optical distortions with their physical causes and behaviors:\n\n1. Radial (Barrel) Distortion\n2. Radial (Pincushion) Distortion\n3. Tangential Distortion\n\nDescriptions:\n[A] Occurs because the lens elements are not perfectly parallel to the image sensor plane, causing asymmetric warping.\n[B] Magnification increases with distance from the optical axis; straight lines are bent inward toward the center.\n[C] Magnification decreases with distance from the optical axis; straight lines bend outward away from the center, typical in wide-angle lenses.\n\nState your match mapping (e.g., 1-X, 2-Y, 3-Z).",
+          "placeholder": "List your match pairs here...",
+          "rows": 3
+        },
+        {
+          "id": "answer27",
+          "name": "answer27_rectified_slope",
+          "category": "conceptual",
+          "heading": "Question 27: Rectified Stereo Epipolar Constraints",
+          "text": "In a perfectly rectified stereo rig (identical parallel cameras looking straight ahead), the epipoles are shifted to infinity. Describe the orientation (vertical, horizontal, or skewed) and the mathematical slope of the epipolar lines in both image planes. How does this simplify the stereo correspondence search?",
+          "placeholder": "Describe the epipolar line alignment and explain the reduction in search dimensionality...",
+          "rows": 4
+        },
+        {
+          "id": "answer28",
+          "name": "answer28_depth_disparity",
+          "category": "numerical",
+          "heading": "Question 28: Calculating Distance from Disparity",
+          "text": "A rectified stereo camera rig has a baseline (distance between camera centers) of B = 12 cm. Both lenses have a focal length of f = 600 pixels. After matching features, a specific 3D point is projected with a coordinate of x_L = 400 pixels in the left image and x_R = 375 pixels in the right image. Calculate:\n1. The disparity d in pixels.\n2. The exact depth (distance) Z of the 3D point from the camera rig in meters.",
+          "placeholder": "Calculate disparity (d) and output depth (Z) in meters showing your formula...",
+          "rows": 4
+        },
+        {
+          "id": "answer29",
+          "name": "answer29_epipolar_visual",
+          "category": "mcq",
+          "heading": "Question 29: Anatomy of Epipolar Geometry",
+          "image": "overall_q29_epipolar.png",
+          "imageAlt": "Epipolar geometry diagram",
+          "text": "Refer to the diagram above. Identify which of the labels (Label A or Label B) represents the epipole of the Left camera's image plane. Define what an 'epipole' represents in terms of projection.",
+          "placeholder": "Select the correct label and write your definition of an epipole...",
+          "rows": 4
+        },
+        {
+          "id": "answer30",
+          "name": "answer30_homography_vs_fund",
+          "category": "conceptual",
+          "heading": "Question 30: Planar vs. Non-Planar Stereo Mapping",
+          "text": "You are observing a scene with two cameras.\n1. If the scene consists entirely of a flat 2D wall, what matrix (Homography H, or Fundamental matrix F) relates the coordinates of corresponding points in both images?\n2. If the scene contains a 3D structure (like a rocky terrain), which matrix must be used to describe the geometric constraint between views?",
+          "placeholder": "Identify the mapping matrices for both flat and 3D scenes...",
           "rows": 3
         }
       ]
