@@ -424,6 +424,7 @@
         let pasteAttempts = 0;
         let fullscreenExits = 0;
         const startTime = Date.now();
+        let isSubmitted = false;
 
         const fsModal = document.getElementById('fullscreenModal');
         const warningOverlay = document.getElementById('securityWarningOverlay');
@@ -467,6 +468,7 @@
         fsEvents.forEach(evt => document.addEventListener(evt, handleFullscreenChange));
 
         function handleFullscreenChange() {
+            if (isSubmitted) return;
             if (fsModal.style.display === 'none') {
                 if (!isFullscreen()) {
                     fullscreenExits++;
@@ -493,6 +495,7 @@
         window.addEventListener('blur', handleBlur);
 
         function handleVisibilityChange() {
+            if (isSubmitted) return;
             if (document.hidden && fsModal.style.display === 'none') {
                 tabSwitches++;
                 showToast("⚠️ Security Warning: Tab switch detected! Violation logged.");
@@ -500,6 +503,7 @@
         }
 
         function handleBlur() {
+            if (isSubmitted) return;
             if (fsModal.style.display === 'none' && warningOverlay.style.display === 'none') {
                 tabSwitches++;
                 showToast("⚠️ Security Warning: Focus lost! Violation logged.");
@@ -695,7 +699,6 @@
                         ta.id = q.id;
                         ta.name = q.name;
                         ta.rows = q.rows || 3;
-                        ta.required = true;
                         ta.placeholder = q.placeholder || 'Type your answer here...';
                         ta.setAttribute('onpaste', 'return false;');
                         ta.setAttribute('oncopy', 'return false;');
@@ -837,6 +840,9 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            isSubmitted = true; // Disable anti-cheat alerts immediately during submit process
+            if (timerInterval) clearInterval(timerInterval);
+            
             const email = emailInput.value.trim().toLowerCase();
             const emailKey = 'submitted_' + currentChallengeId + '_email_' + email;
             const submissionKey = 'cevi_submitted_' + currentChallengeId;
@@ -844,12 +850,14 @@
             // Check email submission history in localStorage
             if (localStorage.getItem(emailKey)) {
                 alert('An assessment response has already been submitted for this challenge using this email address.');
+                isSubmitted = false; // Re-enable if blocked locally
                 return false;
             }
 
             const actionUrl = form.getAttribute('action');
             if (actionUrl === '' || actionUrl.includes('YOUR_FORMSPREE_ENDPOINT')) {
                 alert('Configuration Error: Submission endpoint is not set.');
+                isSubmitted = false;
                 return false;
             }
 
@@ -894,9 +902,12 @@
                     response.json().then(data => {
                         if (data && data.errors) {
                             alert('Submission Error: ' + data.errors.map(err => err.message).join(', '));
+                        } else if (data && data.message) {
+                            alert('Submission Error: ' + data.message);
                         } else {
                             alert('Error: There was an issue submitting your form.');
                         }
+                        isSubmitted = false; // Re-enable alerts since form failed
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Submit Assessment';
                     });
