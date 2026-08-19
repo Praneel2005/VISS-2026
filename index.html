@@ -214,6 +214,27 @@
 </head>
 <body>
 
+<div id="fullscreenModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26,26,46,0.98); z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px; color: #ffffff; font-family: 'Segoe UI', sans-serif;">
+    <h2 style="font-size: 28px; margin-bottom: 20px; font-weight: 800; color: #6a5cf5;">🔒 Secure Assessment Mode</h2>
+    <p style="font-size: 16px; max-width: 600px; line-height: 1.6; margin-bottom: 30px; color: #cbd5e1;">
+        To begin this assessment, you must enter Fullscreen Mode. 
+        Leaving fullscreen, switching tabs, or attempting to copy/paste text will be logged as security violations.
+    </p>
+    <button id="enterFullscreenBtn" style="max-width: 250px; background: linear-gradient(90deg, #6a5cf5, #3f8efc); font-weight: 800; border: none; padding: 16px 30px; border-radius: 8px; font-size: 16px; cursor: pointer; color: white; box-shadow: 0 10px 20px rgba(106,92,245,0.25);">
+        Start Assessment
+    </button>
+</div>
+
+<div id="securityWarningOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(217, 83, 79, 0.98); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: white; padding: 40px; font-family: 'Segoe UI', sans-serif;">
+    <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 20px;">⚠️ Security Violation</h2>
+    <p id="securityWarningText" style="font-size: 18px; max-width: 600px; margin-bottom: 30px; line-height: 1.6;">
+        You have exited fullscreen mode. This violation has been logged.
+    </p>
+    <button id="resumeFullscreenBtn" style="max-width: 280px; background: white; color: #d9534f; font-weight: 800; border: none; padding: 16px 30px; border-radius: 8px; font-size: 16px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.15);">
+        Return to Fullscreen
+    </button>
+</div>
+
 <div class="container">
     <div class="header">
         <span class="badge">CEVI Summer School</span>
@@ -290,6 +311,147 @@
         const questionsContainer = document.getElementById('questionsContainer');
 
         let currentChallengeId = null;
+
+        // Telemetry tracking state
+        let tabSwitches = 0;
+        let pasteAttempts = 0;
+        let fullscreenExits = 0;
+        const startTime = Date.now();
+
+        const fsModal = document.getElementById('fullscreenModal');
+        const warningOverlay = document.getElementById('securityWarningOverlay');
+        const enterFsBtn = document.getElementById('enterFullscreenBtn');
+        const resumeFsBtn = document.getElementById('resumeFullscreenBtn');
+
+        function getDeviceType() {
+            const ua = navigator.userAgent;
+            if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) return "Tablet";
+            if (/Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/i.test(ua)) return "Mobile";
+            return "Desktop";
+        }
+
+        function requestFullscreen() {
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) docEl.requestFullscreen();
+            else if (docEl.mozRequestFullScreen) docEl.mozRequestFullScreen();
+            else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
+            else if (docEl.msRequestFullscreen) docEl.msRequestFullscreen();
+        }
+
+        function isFullscreen() {
+            return document.fullscreenElement || 
+                   document.webkitFullscreenElement || 
+                   document.mozFullScreenElement || 
+                   document.msFullscreenElement;
+        }
+
+        enterFsBtn.addEventListener('click', function() {
+            requestFullscreen();
+            fsModal.style.display = 'none';
+        });
+
+        resumeFsBtn.addEventListener('click', function() {
+            requestFullscreen();
+            warningOverlay.style.display = 'none';
+        });
+
+        // Fullscreen Change Listeners
+        const fsEvents = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
+        fsEvents.forEach(evt => document.addEventListener(evt, handleFullscreenChange));
+
+        function handleFullscreenChange() {
+            if (fsModal.style.display === 'none') {
+                if (!isFullscreen()) {
+                    fullscreenExits++;
+                    if (fullscreenExits >= 3) {
+                        warningOverlay.innerHTML = `
+                            <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 20px; color: white; font-family: 'Segoe UI', sans-serif;">🔒 Form Locked</h2>
+                            <p style="font-size: 18px; max-width: 600px; margin-bottom: 30px; line-height: 1.6; color: white; font-family: 'Segoe UI', sans-serif;">
+                                Assessment permanently locked due to multiple security violations (exited fullscreen 3 times).
+                            </p>
+                        `;
+                        warningOverlay.style.display = 'flex';
+                        disableForm(true);
+                    } else {
+                        document.getElementById('securityWarningText').innerText = 
+                            `You have exited fullscreen mode. Violation logged. Exited: ${fullscreenExits}/3 times.`;
+                        warningOverlay.style.display = 'flex';
+                    }
+                }
+            }
+        }
+
+        // Tab Switch / Focus Loss detection
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('blur', handleBlur);
+
+        function handleVisibilityChange() {
+            if (document.hidden && fsModal.style.display === 'none') {
+                tabSwitches++;
+                showToast("⚠️ Security Warning: Tab switch detected! Violation logged.");
+            }
+        }
+
+        function handleBlur() {
+            if (fsModal.style.display === 'none' && warningOverlay.style.display === 'none') {
+                tabSwitches++;
+                showToast("⚠️ Security Warning: Focus lost! Violation logged.");
+            }
+        }
+
+        // Block copy, paste, drop, contextmenu with event delegation
+        form.addEventListener('paste', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                e.preventDefault();
+                pasteAttempts++;
+                showToast("⚠️ Paste Blocked! Please type your response.");
+            }
+        });
+        form.addEventListener('drop', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                e.preventDefault();
+                showToast("⚠️ Drag & Drop Blocked!");
+            }
+        });
+        form.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+        form.addEventListener('copy', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+        form.addEventListener('cut', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.position = 'fixed';
+            toast.style.top = '30px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.background = '#d9534f';
+            toast.style.color = 'white';
+            toast.style.padding = '14px 28px';
+            toast.style.borderRadius = '8px';
+            toast.style.fontWeight = '700';
+            toast.style.fontSize = '15px';
+            toast.style.zIndex = '11000';
+            toast.style.boxShadow = '0 6px 20px rgba(0,0,0,0.2)';
+            toast.style.border = '1px solid rgba(255,255,255,0.2)';
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.transition = 'opacity 0.5s ease';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
 
         // Cleanup old legacy keys from previous versions to avoid any conflicts
         localStorage.removeItem('cevi_day_1_submitted');
@@ -432,6 +594,7 @@
                  const now = new Date();
                  const expiryDate = new Date(challenge.expiresAt);
                  if (now > expiryDate) {
+                     fsModal.style.display = 'none'; // Dismiss fullscreen requirement
                      disableForm(true); // Hide the form completely so content vanishes
                      messageTitle.innerText = "Assessment Period Closed";
                      messageTitle.style.color = "#d9534f";
@@ -444,6 +607,7 @@
 
              // Then check for previous submission
              if (localStorage.getItem(submissionKey) === 'true') {
+                 fsModal.style.display = 'none'; // Dismiss fullscreen requirement
                  disableForm();
                  messageTitle.innerText = "Submission Received!";
                  messageTitle.style.color = "#0b7285";
@@ -486,6 +650,13 @@
 
             const formData = new FormData(form);
             formData.append('answer', combinedAnswer.trim());
+            
+            // Append telemetry indicators for anti-malpractice auditing
+            formData.append('telemetry_tab_switches', tabSwitches);
+            formData.append('telemetry_paste_attempts', pasteAttempts);
+            formData.append('telemetry_fullscreen_exits', fullscreenExits);
+            formData.append('telemetry_time_taken', Math.round((Date.now() - startTime) / 1000));
+            formData.append('telemetry_device', getDeviceType() + " (" + navigator.platform + ")");
             
             fetch(actionUrl, {
                 method: 'POST',
